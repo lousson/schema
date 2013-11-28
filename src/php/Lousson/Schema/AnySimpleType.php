@@ -32,24 +32,24 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Type\AnySimpleType interface definition
+ * Lousson\Schema\AnySimpleType interface definition
  *
- * @package     org.lousson.type
+ * @package     org.lousson.schema
  * @copyright   (c) 2013, The Lousson Project
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
  * @author      Mathias J. Hennig <mhennig at quirkies.org>
  * @filesource
  */
-namespace Lousson\Type;
+namespace Lousson\Schema;
 
 /* Interfaces: */
-use Lousson\Type\AnyType;
+use Lousson\Schema\AnyType;
 
 /**
- * An interface for simple types
+ * An interface for simple type
  *
- * @since       lousson/Lousson_Type-0.1.0
- * @package     org.lousson.type
+ * @since       lousson/Lousson_Schema-0.1.0
+ * @package     org.lousson.schema
  */
 interface AnySimpleType extends AnyType
 {
@@ -64,7 +64,7 @@ interface AnySimpleType extends AnyType
      * @return  mixed
      *          The internal representation is returned on success
      *
-     * @throws  \Lousson\Type\AnyTypeException
+     * @throws  \Lousson\Schema\AnySchemaException
      *          All possible exceptions implement this interface
      *
      * @throws  \InvalidArgumentException
@@ -88,7 +88,7 @@ interface AnySimpleType extends AnyType
      * @return  string
      *          The $value's canonical representation is returned on success
      *
-     * @throws  \Lousson\Type\AnyTypeException
+     * @throws  \Lousson\Schema\AnySchemaException
      *          All possible exceptions implement this interface
      *
      * @throws  \InvalidArgumentException
@@ -111,7 +111,7 @@ interface AnySimpleType extends AnyType
      * @return  mixed
      *          The imported value is returned on success
      *
-     * @throws  \Lousson\Type\AnyTypeException
+     * @throws  \Lousson\Schema\AnySchemaException
      *          All possible exceptions implement this interface
      *
      * @throws  \InvalidArgumentException
@@ -136,7 +136,7 @@ interface AnySimpleType extends AnyType
      * @return  string
      *          The exported representation is returned on success
      *
-     * @throws  \Lousson\Type\AnyTypeException
+     * @throws  \Lousson\Schema\AnyTypeException
      *          All possible exceptions implement this interface
      *
      * @throws  \InvalidArgumentException

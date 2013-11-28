@@ -15,8 +15,8 @@
             <directory suffix=".php">src/bin</directory>
             <directory suffix=".php">src/php</directory>
             <exclude>
-              <file>src/php/Lousson/Type/AnyType.php</file>
-              <file>src/php/Lousson/Type/AnySimpleType.php</file>
+              <file>src/php/Lousson/Schema/AnyType.php</file>
+              <file>src/php/Lousson/Schema/AnySimpleType.php</file>
            </exclude>
         </whitelist>
     </filter>

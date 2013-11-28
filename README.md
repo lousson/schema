@@ -1,12 +1,12 @@
-Lousson: Type
-================
+Lousson: Schema
+===============
 
-[![Build Status](https://travis-ci.org/lousson/type.png?branch=master)]
-(https://travis-ci.org/lousson/type)
+[![Build Status](https://travis-ci.org/lousson/schema.png?branch=master)]
+(https://travis-ci.org/lousson/schema)
 
 NOTE: THIS PACKAGE IS A WORKING DRAFT !!
 
-The `Lousson_Type` package defines an abstraction layer for parsing,
+The `Lousson_Schema` package defines an abstraction layer for parsing,
 validation and serialization of data records, based on scalar and complex
 type implementations.
 
@@ -14,7 +14,7 @@ type implementations.
 Dependencies
 ------------
 
-The `Lousson_Type` package itself depends on PHP and a(ny) PSR-0
+The `Lousson_Schema` package itself depends on PHP and a(ny) PSR-0
 compatible autoload implementation:
 
 - **PHP 5.3.0+**:                           http://www.php.net/
@@ -43,17 +43,17 @@ http://pear.lousson.org - thus, one can use the "pear" script to
 install any of them, e.g.:
 
 	pear channel-discover pear.lousson.org
-	pear install lousson/Lousson_Type
+	pear install lousson/Lousson_Schema
 
 The complete sourcecode and version history is avialabe at GitHub.
-One may either visit http://github.com/lousson/type or clone
+One may either visit http://github.com/lousson/schema or clone
 the source tree directly:
 
-	git clone git@github.com:lousson/type.git
+	git clone git@github.com:lousson/schema.git
 
 GitHub is also used to track issues like bugs and feature-requests:
 
-	http://github.com/lousson/type/issues
+	http://github.com/lousson/schema/issues
 
 Pull requests and other contributions are welcome!
 
@@ -62,7 +62,7 @@ Copyright & License
 -------------------
 
 Unless denoted otherwise, the following terms apply to all software
-provided within the `Lousson_Type` package:
+provided within the `Lousson_Schema` package:
 
 	Copyright (c) 2013, The Lousson Project
 

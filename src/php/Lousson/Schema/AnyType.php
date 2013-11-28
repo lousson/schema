@@ -32,33 +32,49 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- *  Lousson\Type\Error\TypeRuntimeError class definition
+ * Lousson\Schema\AnyType interface definition
  *
- *  @package    org.lousson.type
- *  @copyright  (c) 2013, The Lousson Project
- *  @license    http://opensource.org/licenses/bsd-license.php New BSD License
- *  @author     Mathias J. Hennig <mhennig at quirkies.org>
- *  @filesource
+ * @package     org.lousson.schema
+ * @copyright   (c) 2013, The Lousson Project
+ * @license     http://opensource.org/licenses/bsd-license.php New BSD License
+ * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @filesource
  */
-namespace Lousson\Type\Error;
-
-/** Dependencies: */
-use Lousson\Type\AnyTypeException;
-use Lousson\Error\RuntimeError;
+namespace Lousson\Schema;
 
 /**
- *  An exception type for runtime errors
+ * An interface for types
  *
- *  The Lousson\Type\Error\TypeRuntimeError exception is raised by
- *  the builtin and generic implementations of the type interfaces in
- *  case they encounter an error that is not caused by the caller.
- *
- *  @since      lousson/Lousson_Type-0.1.0
- *  @package    org.lousson.type
+ * @since       lousson/Lousson_Schema-0.1.0
+ * @package     org.lousson.schema
  */
-class TypeRuntimeError
-    extends RuntimeError
-    implements AnyTypeException
+interface AnyType
 {
+    /**
+     * Obtain the type's name
+     *
+     * The getName() method is used to retrieve the name of the type.
+     *
+     * @return  string
+     *          The type's name, if any, is returned on success.
+     *          NULL is returned in case the type is not associated with
+     *          a name.
+     */
+    public function getName();
+
+    /**
+     * Obtain the type's namespace URI
+     *
+     * The getNamespaceURI() method is used to retrieve the URI of the
+     * namespace the type is associated with. (This corresponds, for
+     * example, to the "target namespace" of the type definition components
+     * in XML Schema.)
+     *
+     * @return  string
+     *          The type's namespace URI, if any, is returned on success.
+     *          NULL is returned in case the type is not associated with
+     *          any namespace.
+     */
+    public function getNamespaceURI();
 }
 
