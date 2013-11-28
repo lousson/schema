@@ -113,7 +113,7 @@
   </fileset>
 
   <taskdef name="phingcallifexists" classname="Phix_Project.ComponentManager.Phing.PhingCallIfExistsTask" />
-  <import file="build.local.xml"/>
+  <import file="build.local.xml" optional="true"/>
 
   <!-- Tell the user what this build file supports -->
   <target name="help">
