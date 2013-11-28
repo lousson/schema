@@ -32,56 +32,62 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Schema\AnyType interface definition
+ *  Lousson\Schema\Generic\GenericSchemaTest class definition
  *
- * @package     org.lousson.schema
- * @copyright   (c) 2013, The Lousson Project
- * @license     http://opensource.org/licenses/bsd-license.php New BSD License
- * @author      Mathias J. Hennig <mhennig at quirkies.org>
- * @filesource
+ *  @package    org.lousson.schema
+ *  @copyright  (c) 2013, The Lousson Project
+ *  @license    http://opensource.org/licenses/bsd-license.php New BSD License
+ *  @author     Mathias J. Hennig <mhennig at quirkies.org>
+ *  @filesource
  */
-namespace Lousson\Schema;
+namespace Lousson\Schema\Generic;
+
+/** Dependencies: */
+use Lousson\Schema\AbstractSchemaTest;
 
 /**
- * An interface for types
+ *  A test case for the GenericSchema class
  *
- * @since       lousson/Lousson_Schema-0.1.0
- * @package     org.lousson.schema
+ *  @since      lousson/Lousson_Schema-0.1.0
+ *  @package    org.lousson.schema
+ *  @link       http://www.phpunit.de/manual/current/en/
  */
-interface AnyType
+class GenericSchemaTest extends AbstractSchemaTest
 {
-	/**
-     * The namespace URI of XML Schema
+    /**
+     * Obtain a schema instance
      *
-     * @var string
+     * The getSchema() method is used in the test cases to obtain an
+     * instance of the schema implementation under test.
+     *
+     * @return  \Lousson\Schema\AnySchema
+     *          An instance of the test schema is returned on success
+     *
+     * @throws  \Exception
+     *          Raised in case of an internal error
      */
-    const NS_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+    public function getSchema()
+    {
+        $this->assertNotNull($this->_schema);
+        return $this->_schema;
+    }
 
     /**
-     * Obtain the type's name
+     * Prepare test suite
      *
-     * The getName() method is used to retrieve the name of the type.
-     *
-     * @return  string
-     *          The type's name, if any, is returned on success.
-     *          NULL is returned in case the type is not associated with
-     *          a name.
+     * The setUp() method is invoked to reset the test runtime and to
+     * prepare for the next test invocation.
      */
-    public function getName();
+    public function setUp()
+    {
+        $this->_schema = new GenericSchema();
+    }
 
     /**
-     * Obtain the type's namespace URI
+     * The schema under test
      *
-     * The getNamespaceURI() method is used to retrieve the URI of the
-     * namespace the type is associated with. (This corresponds, for
-     * example, to the "target namespace" of the type definition components
-     * in XML Schema.)
-     *
-     * @return  string
-     *          The type's namespace URI, if any, is returned on success.
-     *          NULL is returned in case the type is not associated with
-     *          any namespace.
+     * @var \Lousson\Schema\Generic\GenericSchema
      */
-    public function getNamespaceURI();
+    private $_schema;
 }
 
