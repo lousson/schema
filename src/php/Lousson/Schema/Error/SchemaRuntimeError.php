@@ -32,33 +32,33 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- *  Lousson\Type\Error\TypeArgumentError class definition
+ *  Lousson\Schema\Error\SchemaRuntimeError class definition
  *
- *  @package    org.lousson.type
+ *  @package    org.lousson.schema
  *  @copyright  (c) 2013, The Lousson Project
  *  @license    http://opensource.org/licenses/bsd-license.php New BSD License
  *  @author     Mathias J. Hennig <mhennig at quirkies.org>
  *  @filesource
  */
-namespace Lousson\Type\Error;
+namespace Lousson\Schema\Error;
 
 /** Dependencies: */
-use Lousson\Type\AnyTypeException;
-use Lousson\Error\InvalidArgumentError;
+use Lousson\Schema\AnySchemaException;
+use Lousson\Error\RuntimeError;
 
 /**
- *  An exception type for invalid data
+ *  An exception type for runtime errors
  *
- *  The Lousson\Type\Error\TypeArgumentError exception is raised by
- *  the builtin and generic implementations of the type interfaces when
- *  they encounter an error caused by invalid arguments.
+ *  The Lousson\Schema\Error\SchemaRuntimeError exception is raised by
+ *  the builtin and generic implementations of the schema interfaces in
+ *  case they encounter an error that is not caused by the caller.
  *
- *  @since      lousson/Lousson_Type-0.1.0
- *  @package    org.lousson.type
+ *  @since      lousson/Lousson_Schema-0.1.0
+ *  @package    org.lousson.schema
  */
-class TypeArgumentError
-    extends InvalidArgumentError
-    implements AnyTypeException
+class SchemaRuntimeError
+    extends RuntimeError
+    implements AnySchemaException
 {
 }
 

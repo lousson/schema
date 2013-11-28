@@ -14,7 +14,7 @@
   <channel>${project.channel}</channel>
   <summary>Schema abstraction layer</summary>
   <description>
-    The Lousson_Type package defines an abstraction layer for parsing,
+    The Lousson_Schema package defines an abstraction layer for parsing,
     validation and serialization of data records, based on scalar and complex
     type implementations.
   </description>

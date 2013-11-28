@@ -32,30 +32,33 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- *  Lousson\Type\AnyTypeException interface declaration
+ *  Lousson\Schema\Error\SchemaArgumentError class definition
  *
- *  @package    org.lousson.type
+ *  @package    org.lousson.schema
  *  @copyright  (c) 2013, The Lousson Project
  *  @license    http://opensource.org/licenses/bsd-license.php New BSD License
  *  @author     Mathias J. Hennig <mhennig at quirkies.org>
  *  @filesource
  */
-namespace Lousson\Type;
+namespace Lousson\Schema\Error;
 
 /** Dependencies: */
-use Lousson\AnyException;
+use Lousson\Schema\AnySchemaException;
+use Lousson\Error\InvalidArgumentError;
 
 /**
- *  An interface for type exceptions
+ *  An exception type for invalid data
  *
- *  All exceptions raised by implementations of the methods defined
- *  by an interface in the Lousson\Type namespace must implement the
- *  AnyTypeException interface.
+ *  The Lousson\Schema\Error\SchemaArgumentError exception is raised by
+ *  the builtin and generic implementations of the schema interfaces when
+ *  they encounter an error caused by invalid arguments.
  *
- *  @since      lousson/Lousson_Type-0.1.0
- *  @package    org.lousson.type
+ *  @since      lousson/Lousson_Schema-0.1.0
+ *  @package    org.lousson.schema
  */
-interface AnyTypeException extends AnyException
+class SchemaArgumentError
+    extends InvalidArgumentError
+    implements AnySchemaException
 {
 }
 
