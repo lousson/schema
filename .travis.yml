@@ -7,11 +7,6 @@ php:
  
 before_script:
 - pear -D auto_discover=1 install pear.phpunit.de/phpcpd
-- pear -D auto_discover=1 install pear.php.net/VersionControl_SVN-0.5.1
-- pear -D auto_discover=1 install pear.php.net/VersionControl_Git-0.4.4
-- pear -D auto_discover=1 install pear.php.net/Services_Amazon_S3-0.4.0
-- pear -D auto_discover=1 install pear.php.net/Text_Highlighter-0.7.3
-- pear -D auto_discover=1 install pear.php.net/Console_ProgressBar-0.5.2beta
 - pear clear-cache
 - pear channel-discover pear.phix-project.org
 - pear upgrade pear/pear
