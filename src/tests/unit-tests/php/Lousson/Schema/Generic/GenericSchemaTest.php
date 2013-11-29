@@ -97,6 +97,29 @@ class GenericSchemaTest extends AbstractSchemaTest
     }
 
     /**
+     * Test the getType() method
+     *
+     * The testGetType() method is a test for GenericSchema::getType().
+     * For now, it is merely a stub with the intention to increase
+     * code-coverage in some edge-cases (the AbstractSchemaTest class is
+     * already utilizing this method implicitly).
+     *
+     * @expectedException   Lousson\Schema\AnySchemaException
+     * @test
+     *
+     * @throws  \Lousson\Schema\AnySchemaException
+     *          Raised in case the test is successful
+     *
+     * @throws  \Exception
+     *          Raised in case of an internal error
+     */
+    public function testGetType()
+    {
+        $mock = $this->getSimpleTypeMock("foo", "urn:lousson:junk");
+        $this->getSchema($mock)->getType("bar", "urn:lousson:junk");
+    }
+
+    /**
      * Test the setType() method
      *
      * The testSetType() method is a test for GenericSchema::setType().
