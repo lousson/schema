@@ -34,11 +34,11 @@
 /**
  *  Lousson\Schema\Error\SchemaRuntimeError class definition
  *
- *  @package    org.lousson.schema
- *  @copyright  (c) 2013, The Lousson Project
- *  @license    http://opensource.org/licenses/bsd-license.php New BSD License
- *  @author     Mathias J. Hennig <mhennig at quirkies.org>
- *  @filesource
+ * @package     org.lousson.schema
+ * @copyright   (c) 2013, The Lousson Project
+ * @license     http://opensource.org/licenses/bsd-license.php New BSD License
+ * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @filesource 
  */
 namespace Lousson\Schema\Error;
 
@@ -53,8 +53,8 @@ use Lousson\Error\RuntimeError;
  *  the builtin and generic implementations of the schema interfaces in
  *  case they encounter an error that is not caused by the caller.
  *
- *  @since      lousson/Lousson_Schema-0.1.0
- *  @package    org.lousson.schema
+ * @since       lousson/Lousson_Schema-0.1.0
+ * @package     org.lousson.schema
  */
 class SchemaRuntimeError
     extends RuntimeError

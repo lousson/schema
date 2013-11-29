@@ -50,6 +50,13 @@ namespace Lousson\Schema;
  */
 interface AnyType
 {
+	/**
+     * The namespace URI of XML Schema
+     *
+     * @var string
+     */
+    const NS_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+
     /**
      * Obtain the type's name
      *

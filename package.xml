@@ -12,11 +12,11 @@
 
   <name>${project.name}</name>
   <channel>${project.channel}</channel>
-  <summary>Schema abstraction layer</summary>
+  <summary>A schema abstraction layer</summary>
   <description>
     The Lousson_Schema package defines an abstraction layer for parsing,
-    validation and serialization of data records, based on scalar and complex
-    type implementations.
+    validation and serialization of data records; using a type system loosely
+    based on the W3C XML Schema 1.1 Recommendation
   </description>
 
   <lead>

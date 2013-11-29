@@ -34,11 +34,11 @@
 /**
  *  Lousson\Schema\Error\SchemaArgumentErrorTest class definition
  *
- *  @package    org.lousson.schema
- *  @copyright  (c) 2013, The Lousson Project
- *  @license    http://opensource.org/licenses/bsd-license.php New BSD License
- *  @author     Mathias J. Hennig <mhennig at quirkies.org>
- *  @filesource
+ * @package     org.lousson.schema
+ * @copyright   (c) 2013, The Lousson Project
+ * @license     http://opensource.org/licenses/bsd-license.php New BSD License
+ * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @filesource 
  */
 namespace Lousson\Schema\Error;
 
@@ -49,8 +49,8 @@ use ReflectionClass;
 /**
  *  A test case for the SchemaArgumentError class
  *
- *  @since      lousson/Lousson_Schema-0.1.0
- *  @package    org.lousson.schema
+ * @since       lousson/Lousson_Schema-0.1.0
+ * @package     org.lousson.schema
  */
 class SchemaArgumentErrorTest extends AbstractExceptionTest
 {
@@ -61,9 +61,9 @@ class SchemaArgumentErrorTest extends AbstractExceptionTest
      *  tested, according to the given $args - e.g. as provided by the
      *  provideExceptionParameters() method).
      *
-     *  @param  array               $args       The exception arguments
+     * @param   array               $args       The exception arguments
      *
-     *  @return \Exception
+     * @return  \Exception
      *          An exception instance is returned on success
      */
     public function getException(array $args)
@@ -81,7 +81,7 @@ class SchemaArgumentErrorTest extends AbstractExceptionTest
      *  interface names, each referring to an interface the exception that
      *  is returned by the getException() method is expected to implement.
      *
-     *  @return array
+     * @return  array
      *          A list of interface names is returned on success
      */
     public function getExpectedInterfaces()

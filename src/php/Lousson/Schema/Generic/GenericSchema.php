@@ -32,91 +32,105 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Schema\AbstractSchemaTest class definition
+ * Lousson\Schema\Generic\GenericSchema class definition
  *
  * @package     org.lousson.schema
  * @copyright   (c) 2013, The Lousson Project
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
- * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @author      Attila G. Levai <sgnl19 at quirkies.org>
  * @filesource
  */
-namespace Lousson\Schema;
+namespace Lousson\Schema\Generic;
 
-/** Dependencies: */
-use Lousson\Schema\AbstractTest;
+/* Interfaces: */
+use Lousson\Schema\AnySchema;
+use Lousson\Schema\AnyType;
+use Lousson\Schema\Error\SchemaArgumentError;
 
 /**
- * An abstract test case for schema classes
- *
- * The Lousson\Schema\AbstractSchemaTest class has been introduced to
- * ease the creation of unit-tests for implementations of the AnySchema
- * interface.
+ * A generic implementation of the AnySchema interface
  *
  * @since       lousson/Lousson_Schema-0.1.0
  * @package     org.lousson.schema
  */
-abstract class AbstractSchemaTest extends AbstractTest
+class GenericSchema implements AnySchema
 {
     /**
-     * Test the getType() method
+     * Lookup a type implementation
      *
-     * The testValidGetType() method is a test case for the getType()
-     * method declared by the AnySchema interface.
-     * It utilizes the GenericSchema's setType() method to register a
-     * type mock according to the given $name and $namespaceURI, which
-     * is expected to be the return value of getType() when invoked
-     * with the same parameters.
+     * The getType() method returns the type object, an instance of either
+     * the Lousson\Schema\AnySimpleType or Lousson\Schema\AnyComplexType,
+     * associated with the given $name and $namespaceURI.
+     * Although the latter is optional, it's not defined whether omitting
+     * the parmeter triggers the use some sort of search logic and, if so,
+     * how such a search would operate.
      *
      * @param   string      $name           The name of the type to look up
      * @param   string      $namespaceURI   The type's namespace
      *
-     * @dataProvider    provideValidTypeIDs
-     * @test
+     * @return  \Lousson\Schema\AnyType
+     *          A type object, either an instance of AnySimpleType or the
+     *          AnyComplexType, interface is returned on success
      *
-     * @throws  \PHPUnit_Framework_AssertionFailedError
-     *          Raised in case the test discovered any issue
+     * @throws  \Lousson\Schema\AnySchemaException
+     *          All possible exceptions implement this interface
      *
-     * @throws  \Exception
+     * @throws  \InvalidArgumentException
+     *          Raised in case one of the input parameters is considered
+     *          invalid
+     *
+     * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function testValidGetType($name, $namespaceURI = null)
+    public function getType($name, $namespaceURI = null)
     {
-        $namespaceURI = "urn:lousson:junk";
-        $mock = $this->getSimpleTypeMock($name, $namespaceURI);
-        $schema = $this->getSchema($mock);
-        $type = $this->getType($name, $namespaceURI);
+		if (null === $namespaceURI) {
+			$namespaceURI = AnyType::NS_SCHEMA;
+		}
 
-        $this->assertEquals(
-            $name, $type->getName(), sprintf(
-            "%s::getType(\"%s\", ..)->getName() must return ".
-            "\"%s\"", get_class($schema), $name, $name
-        ));
+		if (!isset($this->_types[$namespaceURI])) {
+            $message = "Unknown namespace: \"$namespaceURI\"";
+			throw new SchemaArgumentError($message);
+		}
+
+        if (!isset($this->_types[$namespaceURI][$name])) {
+            $message = "Unknown type: \"$name\" (\"$namespaceURI\")";
+			throw new SchemaArgumentError($message);
+        }
+
+		return $this->_types[$namespaceURI][$name];
     }
 
     /**
-     * Test the getType() method
+     * Set a type
      *
-     * The testInvalidGetType() method is a test case for the getType()
-     * method declared by the AnySchema interface.
-     * It utilizes a $name / $namespaceURI combination that is considered
-     * invalid and expects a schema exception to be thrown.
+     * The setType() method is used to set an AnyType $type and associate
+     * it with $name and $namespaceURI.
      *
-     * @param   string      $name           The name of the type to look up
-     * @param   string      $namespaceURI   The type's namespace
+     * @param	string	$name			The name to associate the type with
+     * @param	string	$namespaceURI	The namespace the type is associated to
+     * @param	AnyType	$type			The type to set
      *
-     * @dataProvider        provideInvalidTypeIDs
-     * @expectedException   Lousson\Schema\AnySchemaException
-     * @test
-     *
-     * @throws  \Lousson\Schema\AnySchemaException
-     *          Raised in case the test is successful
-     *
-     * @throws  \Exception
-     *          Raised in case of an internal error
+     * @throws  SchemaArgumentError
+     *          Raised in case one of the input parameters is considered
+     *          invalid
      */
-    public function testInvalidGetType($name, $namespaceURI = null)
+    public function setType($name, $namespaceURI, AnyType $type)
     {
-        $this->getType($name, $namespaceURI);
+    	if (!preg_match("/^[A-Za-z][A-Za-z0-9\\-_.]*\$/", $name)) {
+            $message = "Invalid type name: \"$name\"";
+    		throw new SchemaArgumentError($message);
+    	}
+
+		$namespaceURI = (string) $namespaceURI;
+		$this->_types[$namespaceURI][$name] = $type;
     }
+
+    /**
+     * The list of types
+     *
+     * @var array
+     */
+    private $_types = array();
 }
 
