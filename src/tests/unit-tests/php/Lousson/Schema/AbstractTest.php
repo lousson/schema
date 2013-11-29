@@ -34,11 +34,11 @@
 /**
  *  Lousson\Schema\AbstractTest class definition
  *
- *  @package    org.lousson.schema
- *  @copyright  (c) 2013, The Lousson Project
- *  @license    http://opensource.org/licenses/bsd-license.php New BSD License
- *  @author     Mathias J. Hennig <mhennig at quirkies.org>
- *  @filesource
+ * @package     org.lousson.schema
+ * @copyright   (c) 2013, The Lousson Project
+ * @license     http://opensource.org/licenses/bsd-license.php New BSD License
+ * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @filesource 
  */
 namespace Lousson\Schema;
 
@@ -51,9 +51,9 @@ use PHPUnit_Framework_TestCase;
  *  The Lousson\Schema\AbstractTest class serves as a base class for
  *  tests agains the interfaces in the Lousson\Schema namespace.
  *
- *  @since      lousson/Lousson_Schema-0.1.0
- *  @package    org.lousson.schema
- *  @link       http://www.phpunit.de/manual/current/en/
+ * @since       lousson/Lousson_Schema-0.1.0
+ * @package     org.lousson.schema
+ * @link        http://www.phpunit.de/manual/current/en/
  */
 abstract class AbstractTest extends PHPUnit_Framework_TestCase
 {
