@@ -34,11 +34,11 @@
 /**
  *  Lousson\Schema\AnySchemaException interface declaration
  *
- *  @package    org.lousson.schema
- *  @copyright  (c) 2013, The Lousson Project
- *  @license    http://opensource.org/licenses/bsd-license.php New BSD License
- *  @author     Mathias J. Hennig <mhennig at quirkies.org>
- *  @filesource
+ * @package     org.lousson.schema
+ * @copyright   (c) 2013, The Lousson Project
+ * @license     http://opensource.org/licenses/bsd-license.php New BSD License
+ * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @filesource 
  */
 namespace Lousson\Schema;
 
@@ -52,8 +52,8 @@ use Lousson\AnyException;
  *  by an interface in the Lousson\Schema namespace must implement the
  *  AnySchemaException interface.
  *
- *  @since      lousson/Lousson_Schema-0.1.0
- *  @package    org.lousson.schema
+ * @since       lousson/Lousson_Schema-0.1.0
+ * @package     org.lousson.schema
  */
 interface AnySchemaException extends AnyException
 {

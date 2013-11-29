@@ -34,11 +34,11 @@
 /**
  *  Lousson\Schema\Generic\GenericSchemaTest class definition
  *
- *  @package    org.lousson.schema
- *  @copyright  (c) 2013, The Lousson Project
- *  @license    http://opensource.org/licenses/bsd-license.php New BSD License
- *  @author     Mathias J. Hennig <mhennig at quirkies.org>
- *  @filesource
+ * @package     org.lousson.schema
+ * @copyright   (c) 2013, The Lousson Project
+ * @license     http://opensource.org/licenses/bsd-license.php New BSD License
+ * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @filesource 
  */
 namespace Lousson\Schema\Generic;
 
@@ -48,9 +48,9 @@ use Lousson\Schema\AbstractSchemaTest;
 /**
  *  A test case for the GenericSchema class
  *
- *  @since      lousson/Lousson_Schema-0.1.0
- *  @package    org.lousson.schema
- *  @link       http://www.phpunit.de/manual/current/en/
+ * @since       lousson/Lousson_Schema-0.1.0
+ * @package     org.lousson.schema
+ * @link        http://www.phpunit.de/manual/current/en/
  */
 class GenericSchemaTest extends AbstractSchemaTest
 {
