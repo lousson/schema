@@ -55,26 +55,48 @@ use Lousson\Schema\Error\SchemaArgumentError;
  */
 class GenericSchema implements AnySchema
 {
-    /* @see AnySchema::getType() */
+    /**
+     * Lookup a type implementation
+     *
+     * The getType() method returns the type object, an instance of either
+     * the Lousson\Schema\AnySimpleType or Lousson\Schema\AnyComplexType,
+     * associated with the given $name and $namespaceURI.
+     * Although the latter is optional, it's not defined whether omitting
+     * the parmeter triggers the use some sort of search logic and, if so,
+     * how such a search would operate.
+     *
+     * @param   string      $name           The name of the type to look up
+     * @param   string      $namespaceURI   The type's namespace
+     *
+     * @return  \Lousson\Schema\AnyType
+     *          A type object, either an instance of AnySimpleType or the
+     *          AnyComplexType, interface is returned on success
+     *
+     * @throws  \Lousson\Schema\AnySchemaException
+     *          All possible exceptions implement this interface
+     *
+     * @throws  \InvalidArgumentException
+     *          Raised in case one of the input parameters is considered
+     *          invalid
+     *
+     * @throws  \RuntimeException
+     *          Raised in case of an internal error
+     */
     public function getType($name, $namespaceURI = null)
     {
 		if (null === $namespaceURI) {
 			$namespaceURI = AnyType::NS_SCHEMA;
 		}
 
-		if (!array_key_exists($namespaceURI, $this->_types)) {
-			throw new SchemaArgumentError(
-				"Invalid type namespace given ".var_export($namespaceURI, true)
-			);
+		if (!isset($this->_types[$namespaceURI])) {
+            $message = "Unknown namespace: \"$namespaceURI\"";
+			throw new SchemaArgumentError($message);
 		}
 
-    	if (empty($name) ||
-    			!array_key_exists($name, $this->_types[$namespaceURI])
-    	) {
-    		throw new SchemaArgumentError(
-				"Invalid type name given ".var_export($name, true)
-       		);
-    	}
+        if (!isset($this->_types[$namespaceURI][$name])) {
+            $message = "Unknown type: \"$name\" (\"$namespaceURI\")";
+			throw new SchemaArgumentError($message);
+        }
 
 		return $this->_types[$namespaceURI][$name];
     }
