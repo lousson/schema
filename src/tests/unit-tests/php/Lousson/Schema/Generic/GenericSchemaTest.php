@@ -43,6 +43,7 @@
 namespace Lousson\Schema\Generic;
 
 /** Dependencies: */
+use Lousson\Schema\AnyType;
 use Lousson\Schema\AbstractSchemaTest;
 
 /**
@@ -59,6 +60,11 @@ class GenericSchemaTest extends AbstractSchemaTest
      *
      * The getSchema() method is used in the test cases to obtain an
      * instance of the schema implementation under test.
+     * If the $type parameter is set, the caller expects the returned
+     * schema to recognize the $type provided (when invoking getType()
+     * with it's name and namespaceURI) - at least.
+     *
+     * @param   AnyType     $type       The required type object, if any
      *
      * @return  \Lousson\Schema\AnySchema
      *          An instance of the test schema is returned on success
@@ -66,9 +72,16 @@ class GenericSchemaTest extends AbstractSchemaTest
      * @throws  \Exception
      *          Raised in case of an internal error
      */
-    public function getSchema()
+    public function getSchema(AnyType $type = null)
     {
         $this->assertNotNull($this->_schema);
+
+        if (isset($type)) {
+            $name = $type->getName();
+            $namespaceURI = $type->getNamespaceURI();
+            $this->_schema->setType($name, $namespaceURI, $type);
+        }
+
         return $this->_schema;
     }
 

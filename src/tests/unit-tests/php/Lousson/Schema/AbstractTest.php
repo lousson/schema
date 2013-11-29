@@ -43,6 +43,7 @@
 namespace Lousson\Schema;
 
 /** Dependencies: */
+use Lousson\Schema\AnyType;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -97,6 +98,11 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
      *
      * The getSchema() method is used in the test cases to obtain an
      * instance of the schema implementation under test.
+     * If the $type parameter is set, the caller expects the returned
+     * schema to recognize the $type provided (when invoking getType()
+     * with it's name and namespaceURI) - at least.
+     *
+     * @param   AnyType     $type       The required type object, if any
      *
      * @return  \Lousson\Schema\AnySchema
      *          An instance of the test schema is returned on success
@@ -104,7 +110,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
      * @throws  \Exception
      *          Raised in case of an internal error
      */
-    abstract public function getSchema();
+    abstract public function getSchema(AnyType $type = null);
 
     /**
      * Obtain a type instance
