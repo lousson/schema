@@ -38,7 +38,7 @@
  * @copyright   (c) 2013, The Lousson Project
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
  * @author      Mathias J. Hennig <mhennig at quirkies.org>
- * @filesource 
+ * @filesource
  */
 namespace Lousson\Schema\Generic;
 
@@ -81,6 +81,29 @@ class GenericSchemaTest extends AbstractSchemaTest
     public function setUp()
     {
         $this->_schema = new GenericSchema();
+    }
+
+    /**
+     * Test the setType() method
+     *
+     * The testSetType() method is a test for GenericSchema::setType().
+     * For now, it is merely a stub with the intention to increase
+     * code-coverage in some edge-cases (the AbstractSchemaTest class is
+     * already utilizing this method implicitly).
+     *
+     * @expectedException   Lousson\Schema\AnySchemaException
+     * @test
+     *
+     * @throws  \Lousson\Schema\AnySchemaException
+     *          Raised in case the test is successful
+     *
+     * @throws  \Exception
+     *          Raised in case of an internal error
+     */
+    public function testSetType()
+    {
+        $mock = $this->getSimpleTypeMock("foo", "urn:lousson:junk");
+        $this->getSchema()->setType("--foobar", null, $mock);
     }
 
     /**

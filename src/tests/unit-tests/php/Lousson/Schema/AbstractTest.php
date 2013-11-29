@@ -38,7 +38,7 @@
  * @copyright   (c) 2013, The Lousson Project
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
  * @author      Mathias J. Hennig <mhennig at quirkies.org>
- * @filesource 
+ * @filesource
  */
 namespace Lousson\Schema;
 
