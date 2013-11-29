@@ -117,10 +117,9 @@ class GenericSchema implements AnySchema
      */
     public function setType($name, $namespaceURI, AnyType $type)
     {
-    	if (empty($name)) {
-    		throw new SchemaArgumentError(
-				"Invalid type name given ".var_export($name, true)
-    		);
+    	if (!preg_match("/^[A-Za-z][A-Za-z0-9\\-_.]*\$/", $name)) {
+            $message = "Invalid type name: \"$name\"";
+    		throw new SchemaArgumentError($message);
     	}
 
 		$namespaceURI = (string) $namespaceURI;

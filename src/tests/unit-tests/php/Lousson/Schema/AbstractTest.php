@@ -207,6 +207,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
             array($foobar),
             array("", null),
             array($foobar, null),
+            array("--foobar"),
         );
     }
 
