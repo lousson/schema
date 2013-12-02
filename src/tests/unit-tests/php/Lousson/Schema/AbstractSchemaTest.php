@@ -82,7 +82,7 @@ abstract class AbstractSchemaTest extends AbstractTest
     public function testValidGetType($name, $namespaceURI = null)
     {
         $namespaceURI = "urn:lousson:junk";
-        $mock = $this->getSimpleTypeMock($name, $namespaceURI);
+        $mock = $this->getTypeMock($name, $namespaceURI);
         $schema = $this->getSchema($mock);
         $type = $this->getType($name, $namespaceURI);
 

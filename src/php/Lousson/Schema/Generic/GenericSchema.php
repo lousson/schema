@@ -58,19 +58,18 @@ class GenericSchema implements AnySchema
     /**
      * Lookup a type implementation
      *
-     * The getType() method returns the type object, an instance of either
-     * the Lousson\Schema\AnySimpleType or Lousson\Schema\AnyComplexType,
-     * associated with the given $name and $namespaceURI.
-     * Although the latter is optional, it's not defined whether omitting
-     * the parmeter triggers the use some sort of search logic and, if so,
-     * how such a search would operate.
+     * The getType() method returns the type object, an instance of the
+     * Lousson\Schema\AnyType interface, that is associated with the given
+     * $name and $namespaceURI.
      *
      * @param   string      $name           The name of the type to look up
      * @param   string      $namespaceURI   The type's namespace
      *
      * @return  \Lousson\Schema\AnyType
-     *          A type object, either an instance of AnySimpleType or the
-     *          AnyComplexType, interface is returned on success
+     *          An instance of the AnyType interface is returned on success
+     *
+     * @return  \Lousson\Schema\AnyType
+     *          An instance of the AnyType interface is returned on success
      *
      * @throws  \Lousson\Schema\AnySchemaException
      *          All possible exceptions implement this interface

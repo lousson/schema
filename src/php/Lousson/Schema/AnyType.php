@@ -83,5 +83,103 @@ interface AnyType
      *          any namespace.
      */
     public function getNamespaceURI();
+
+    /**
+     * Import to value space
+     *
+     * The import() method converts the given $input representation,
+     * which must conform to the "record item" definition, to it's internal
+     * value, which might be anything - with the restriction that every
+     * type should use only one internal representation.
+     *
+     * @param   string  $input      The value to import
+     *
+     * @return  mixed
+     *          The internal representation is returned on success
+     *
+     * @throws  \Lousson\Schema\AnySchemaException
+     *          All possible exceptions implement this interface
+     *
+     * @throws  \InvalidArgumentException
+     *          Raised in case either the given $input representation is
+     *          or the imported value would be considered invalid
+     *
+     * @throws  \RuntimeException
+     *          Raised in case of an internal error
+     */
+    public function import($input);
+
+    /**
+     * Export from value space
+     *
+     * The export() method is used to convert the given $value (which
+     * must be a compatible, probably import()ed representation) to it's
+     * canonical representation, which must comply to the "record item"
+     * definition.
+     *
+     * @param   mixed   $value      The value to export
+     *
+     * @return  mixed
+     *          The $value's canonical representation is returned on success
+     *
+     * @throws  \Lousson\Schema\AnySchemaException
+     *          All possible exceptions implement this interface
+     *
+     * @throws  \InvalidArgumentException
+     *          Raised in case the given $value is considered invalid
+     *
+     * @throws  \RuntimeException
+     *          Raised in case of an internal error
+     */
+    public function export($value);
+
+    /**
+     * Import a value from another type's representation
+     *
+     * The importFrom() method is used to import the given $input from
+     * the $type's representation to the own value space.
+     *
+     * @param   AnyType         $type       The type to import from
+     * @param   string          $input      The value to import
+     *
+     * @return  mixed
+     *          The imported value is returned on success
+     *
+     * @throws  \Lousson\Schema\AnySchemaException
+     *          All possible exceptions implement this interface
+     *
+     * @throws  \InvalidArgumentException
+     *          Raised in case either the given $input representation is
+     *          or the imported value would be considered invalid by either
+     *          of the two types
+     *
+     * @throws  \RuntimeException
+     *          Raised in case of an internal error
+     */
+    public function importFrom(AnyType $type, $input);
+
+    /**
+     * Export a value into another type's representation
+     *
+     * The exportTo() method is used to export the given $value from the
+     * own value space into the $type's canonical representation.
+     *
+     * @param   AnyType         $type   The type to export to
+     * @param   mixed           $value  The value to export
+     *
+     * @return  string
+     *          The exported representation is returned on success
+     *
+     * @throws  \Lousson\Schema\AnyTypeException
+     *          All possible exceptions implement this interface
+     *
+     * @throws  \InvalidArgumentException
+     *          Raised in case the given $value is considered invalid by
+     *          either of the two types
+     *
+     * @throws  \RuntimeException
+     *          Raised in case of an internal error
+     */
+    public function exportTo(AnyType $type, $value);
 }
 

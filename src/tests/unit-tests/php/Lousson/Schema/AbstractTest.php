@@ -73,20 +73,6 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
     const I_TYPE = "Lousson\\Schema\\AnyType";
 
     /**
-     * The fully qualified name of the AnyComplexType interface
-     *
-     * @var string
-     */
-    const I_COMPLEX_TYPE = "Lousson\\Schema\\AnyComplexType";
-
-    /**
-     * The fully qualified name of the AnySimpleType interface
-     *
-     * @var string
-     */
-    const I_SIMPLE_TYPE = "Lousson\\Schema\\AnySimpleType";
-
-    /**
      * The namespace URI of XML Schema
      *
      * @var string
@@ -123,8 +109,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
      * @param   string      $namespaceURI   The type's namespace
      *
      * @return  \Lousson\Schema\AnyType
-     *          A type object, either an instance of AnySimpleType or the
-     *          AnyComplexType, interface is returned on success
+     *          An instance of the AnyType interface is returned on success
      *
      * @throws  \PHPUnit_Framework_AssertionFailedError
      *          Raised in case the test discovered any issue
@@ -142,19 +127,19 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
     public function getType($name, $namespaceURI = null)
     {
         $schema = $this->getSchema();
-        $this->assertInstanceOf(self::I_SCHEMA, $schema);
+        $this->assertInstanceOf(
+            self::I_SCHEMA, $schema, sprintf(
+            "%s::getSchema() must return an instance of %s",
+            get_class($this), self::I_SCHEMA
+        ));
 
         $type = $schema->getType($name, $namespaceURI);
-        $isSimpleType = $this->isInstanceOf(self::I_SIMPLE_TYPE);
-        $isComplexType = $this->isInstanceOf(self::I_COMPLEX_TYPE);
-        $isType = $this->logicalOr($isSimpleType, $isComplexType);
-
-        $description = sprintf(
+        $this->assertInstanceOf(
+            self::I_TYPE, $type, sprintf(
             "%s::getType() must return an instance of %s",
             get_class($schema), self::I_TYPE
-        );
+        ));
 
-        $this->assertThat($type, $isType, $description);
         return $type;
     }
 
@@ -218,30 +203,32 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Obtain a simple type mock object
+     * Obtain a type mock object
      *
-     * The getSimpleTypeMock() method is used to obtain a mock object for
-     * the AnySimpleType interface. This will be an unconfigured object,
+     * The getTypeMock() method is used to obtain a mock object for
+     * the AnyType interface. This will be an unconfigured object,
      * where each invocation of any of the interface methods will raise an
      * BadMethodCallException - unless configured via ->expects()..
      * before.
      *
-     * @return  \Lousson\Schema\AnySimpleType
+     * @return  \Lousson\Schema\AnyType
      *          An unconfigured simple type mock is returned on success
      *
      * @throws  \Excpetion
      *          Raised in case of an internal error
      */
-    public function getSimpleTypeMock(
-        $name,
-        $namespaceURI = self::NS_SCHEMA)
+    public function getTypeMock($name, $namespaceURI)
     {
-        $methods = array(
-            "getName", "getNamespaceURI",
-            "import", "export", "importFrom", "exportTo"
+        static $methods = array(
+            "getName",
+            "getNamespaceURI",
+            "import",
+            "export",
+            "importFrom",
+            "exportTo"
         );
 
-        $mock = $this->getMock(self::I_SIMPLE_TYPE, $methods);
+        $mock = $this->getMock(self::I_TYPE, $methods);
         $pattern = "Mocked method %s::%s() is not configured";
 
         $mock
@@ -255,7 +242,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue((string) $namespaceURI));
 
         for ($i = 2; $i != count($methods); ++$i) {
-            $message = sprintf($pattern, self::I_SIMPLE_TYPE, $methods[$i]);
+            $message = sprintf($pattern, self::I_TYPE, $methods[$i]);
             $error = new \BadMethodCallException($message);
             $mock
                 ->expects($this->any())

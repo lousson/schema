@@ -115,7 +115,7 @@ class GenericSchemaTest extends AbstractSchemaTest
      */
     public function testGetType()
     {
-        $mock = $this->getSimpleTypeMock("foo", "urn:lousson:junk");
+        $mock = $this->getTypeMock("foo", "urn:lousson:junk");
         $this->getSchema($mock)->getType("bar", "urn:lousson:junk");
     }
 
@@ -138,7 +138,7 @@ class GenericSchemaTest extends AbstractSchemaTest
      */
     public function testSetType()
     {
-        $mock = $this->getSimpleTypeMock("foo", "urn:lousson:junk");
+        $mock = $this->getTypeMock("foo", "urn:lousson:junk");
         $this->getSchema()->setType("--foobar", null, $mock);
     }
 
