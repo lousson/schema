@@ -32,47 +32,66 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Schema\AnySchema interface definition
+ * Lousson\Schema\Builtin\BuiltinStringType class definition
  *
  * @package     org.lousson.schema
  * @copyright   (c) 2013, The Lousson Project
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
- * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @author      Attila G. Levai <sgnl19 at quirkies.org>
  * @filesource
  */
-namespace Lousson\Schema;
+namespace Lousson\Schema\Builtin;
+
+/* Dependencies: */
+use Lousson\Schema\Builtin\BuiltinAtomicType;
 
 /**
- * An interface for schemas
+ * A generic implementation of the AnySchema interface
  *
  * @since       lousson/Lousson_Schema-0.1.0
  * @package     org.lousson.schema
  */
-interface AnySchema
+class BuiltinStringType extends BuiltinAtomicType
 {
     /**
-     * Lookup a type implementation
+     * The type name of the StringType
      *
-     * The getType() method returns the type object, an instance of the
-     * Lousson\Schema\AnyType interface, that is associated with the given
-     * $name and $namespaceURI.
-     *
-     * @param   string      $name           The name of the type to look up
-     * @param   string      $namespaceURI   The type's namespace
-     *
-     * @return  \Lousson\Schema\AnyType
-     *          An instance of the AnyType interface is returned on success
-     *
-     * @throws  \Lousson\Schema\AnySchemaException
-     *          All possible exceptions implement this interface
-     *
-     * @throws  \InvalidArgumentException
-     *          Raised in case one of the input parameters is considered
-     *          invalid
-     *
-     * @throws  \RuntimeException
-     *          Raised in case of an internal error
+     * @var string
      */
-    public function getType($name, $namespaceURI = null);
+    const NAME = "string";
+
+    /**
+     * Obtain a string type instance
+     *
+     * The static getInstance() method is a shortcut used to obtain a
+     * StringType instance.
+     *
+     * Note that this method is deprecated; it has been introduced only
+     * to work as an intermediary solution for the dependency issue in
+     * the AbstractEnty class anyway!
+     *
+     * @return  \Lousson\Schema\Type\StringType
+     *          A string type instance is returned on success
+     */
+    public static function getInstance()
+    {
+        static $instance = null;
+        isset($instance) || ($instance = new self());
+        return $instance;
+    }
+
+    /**
+     * Obtain the type's name
+     *
+     * The getName() method is used to retrieve the name of the type; the
+     * same as the value of the StringType::NAME constant.
+     *
+     * @return  string
+     *          The type's name is returned on success.
+     */
+    public function getName()
+    {
+        return self::NAME;
+    }
 }
 

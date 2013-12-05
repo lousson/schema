@@ -32,24 +32,37 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Schema\AnySchema interface definition
+ * Lousson\Schema\Builtin\BuiltinSchema class definition
  *
  * @package     org.lousson.schema
  * @copyright   (c) 2013, The Lousson Project
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
- * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @author      Attila G. Levai <sgnl19 at quirkies.org>
  * @filesource
  */
-namespace Lousson\Schema;
+namespace Lousson\Schema\Builtin;
+
+/* Dependencies: */
+use Lousson\Schema\AbstractSchema;
 
 /**
- * An interface for schemas
+ * The builtin implementation of the AnySchema interface
  *
  * @since       lousson/Lousson_Schema-0.1.0
  * @package     org.lousson.schema
  */
-interface AnySchema
+final class BuiltinSchema extends AbstractSchema
 {
+    /**
+     *
+     */
+    public static function getInstance()
+    {
+        static $instance = null;
+        isset($instance) || ($instance = new self());
+        return $instance;
+    }
+
     /**
      * Lookup a type implementation
      *
@@ -59,6 +72,9 @@ interface AnySchema
      *
      * @param   string      $name           The name of the type to look up
      * @param   string      $namespaceURI   The type's namespace
+     *
+     * @return  \Lousson\Schema\AnyType
+     *          An instance of the AnyType interface is returned on success
      *
      * @return  \Lousson\Schema\AnyType
      *          An instance of the AnyType interface is returned on success
@@ -73,6 +89,52 @@ interface AnySchema
      * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function getType($name, $namespaceURI = null);
+    public function getType($name, $namespaceURI = null)
+    {
+        $key = (string) $name;
+        $uri = (string) $namespaceURI;
+
+        if (self::NS_SCHEMA === $uri
+                && isset($this->_map[$key])) {
+
+            if (!isset($this->_types[$key])) {
+                $class = $this->_map[$key];
+                $this->_types[$key] = new $class;
+            }
+
+            $type = $this->_types[$key];
+        }
+        else {
+            /* May raise a schema exception */
+            $type = parent::getType($name, $namespaceURI);
+        }
+
+        return $type;
+    }
+
+    /**
+     * A map ap XS type names to implementation class names
+     *
+     * @var array
+     */
+    private $_map = array(
+        "anyType" =>
+            "Lousson\\Schema\\Builtin\\BuiltinUrType",
+        "anySimpleType" =>
+            "Lousson\\Schema\\Builtin\\BuiltinSimpleType",
+        "anyAtomicType" =>
+            "Lousson\\Schema\\Builtin\\BuiltinAtomicType",
+        "anyURI" =>
+            "Lousson\\Schema\\Builtin\\BuiltinURIType",
+        "string" =>
+            "Lousson\\Schema\\Builtin\\BuiltinStringType",
+    );
+
+    /**
+     * A register for type instances
+     *
+     * @var array
+     */
+    private $_types = array();
 }
 

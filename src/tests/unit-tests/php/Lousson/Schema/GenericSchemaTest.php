@@ -45,7 +45,6 @@ namespace Lousson\Schema\Generic;
 /** Dependencies: */
 use Lousson\Schema\AnyType;
 use Lousson\Schema\AbstractSchemaTest;
-use Lousson\Schema\Generic\GenericSchema;
 
 /**
  *  A test case for the GenericSchema class
@@ -123,35 +122,11 @@ class GenericSchemaTest extends AbstractSchemaTest
     /**
      * Test the setType() method
      *
-     * The testInvalidSetType() method is a test for setType().
+     * The testSetType() method is a test for GenericSchema::setType().
      * For now, it is merely a stub with the intention to increase
      * code-coverage in some edge-cases (the AbstractSchemaTest class is
      * already utilizing this method implicitly).
      *
-     * @throws  \Exception
-     *          Raised in case of an internal error
-     */
-    public function testValidSetType()
-    {
-        $schema = $this->getSchema();
-        $name = "foo";
-        $namespaceURI = "urn:lousson:junk";
-        $mock = $this->getTypeMock($name, $namespaceURI);
-        $schema->setType(null, null, $mock);
-        $type = $this->getType($name, $namespaceURI);
-        $this->assertEquals($name, $type->getName());
-        $this->assertEquals($namespaceURI, $type->getNamespaceURI());
-    }
-
-    /**
-     * Test the setType() method
-     *
-     * The testInvalidSetType() method is a test for setType().
-     * For now, it is merely a stub with the intention to increase
-     * code-coverage in some edge-cases (the AbstractSchemaTest class is
-     * already utilizing this method implicitly).
-     *
-     * @dataProvider        provideMalformedTypeIDs
      * @expectedException   Lousson\Schema\AnySchemaException
      * @test
      *
@@ -161,10 +136,10 @@ class GenericSchemaTest extends AbstractSchemaTest
      * @throws  \Exception
      *          Raised in case of an internal error
      */
-    public function testInvalidSetType($name, $namespaceURI = null)
+    public function testSetType()
     {
-        $mock = $this->getTypeMock($name, $namespaceURI);
-        $this->getSchema()->setType($name, $namespaceURI, $mock);
+        $mock = $this->getTypeMock("foo", "urn:lousson:junk");
+        $this->getSchema()->setType("--foobar", null, $mock);
     }
 
     /**

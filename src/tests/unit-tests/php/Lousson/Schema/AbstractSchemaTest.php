@@ -58,6 +58,155 @@ use Lousson\Schema\AbstractTest;
 abstract class AbstractSchemaTest extends AbstractTest
 {
     /**
+     * Obtain a schema instance
+     *
+     * The getSchema() method is used in the test cases to obtain an
+     * instance of the schema implementation under test.
+     *
+     * @return  \Lousson\Schema\AnySchema
+     *          An instance of the test schema is returned on success
+     *
+     * @throws  \Exception
+     *          Raised in case of an internal error
+     */
+    abstract public function getSchema();
+
+    /**
+     * Obtain a type instance
+     *
+     * The getType() method is used instead of a direct invocation of the
+     * schema's method of the same name. It decorates the testee, in order
+     * to check on it's behavior.
+     *
+     * @param   string      $name           The name of the type to look up
+     * @param   string      $namespaceURI   The type's namespace
+     *
+     * @return  \Lousson\Schema\AnyType
+     *          An instance of the AnyType interface is returned on success
+     *
+     * @throws  \PHPUnit_Framework_AssertionFailedError
+     *          Raised in case the test discovered any issue
+     *
+     * @throws  \Lousson\Schema\AnySchemaException
+     *          All allowed exceptions implement this interface
+     *
+     * @throws  \InvalidArgumentException
+     *          Raised in case one of the input parameters is considered
+     *          invalid
+     *
+     * @throws  \Exception
+     *          Raised in case of an internal error
+     */
+    public function getType($name, $namespaceURI = null)
+    {
+        $schema = $this->getSchema();
+        $this->assertInstanceOf(
+            self::I_SCHEMA, $schema, sprintf(
+            "%s::getSchema() must return an instance of %s",
+            get_class($this), self::I_SCHEMA
+        ));
+
+        $type = $schema->getType($name, $namespaceURI);
+        $this->assertInstanceOf(
+            self::I_TYPE, $type, sprintf(
+            "%s::getType() must return an instance of %s",
+            get_class($schema), self::I_TYPE
+        ));
+
+        return $type;
+    }
+
+    /**
+     * Obtain a sequence of getType() parameters
+     *
+     * The provideValidTypeIDs() method is a data provider that returns
+     * a list of one or more sets, each of whose consists of one or two
+     * items:
+     *
+     * - The name of a type that is expected to be recognized
+     * - The type's namespace URI, or NULL
+     *
+     * This complies with the parameters expected by AnySchema::getType().
+     *
+     * @return  array
+     *          An array of getType() parameters is returned on success
+     *
+     * @throws  \Exception
+     *          Raised in case of an internal error
+     */
+    public function provideValidTypeIDs()
+    {
+        return array(
+            array("anyType", self::NS_SCHEMA),
+            array("anySimpleType", self::NS_SCHEMA),
+            array("anyAtomicType", self::NS_SCHEMA),
+            array("anyURI", self::NS_SCHEMA),
+            array("string", self::NS_SCHEMA),
+        );
+    }
+
+    /**
+     * Obtain a sequence of getType() parameters
+     *
+     * The provideInvalidTypeIDs() method is a data provider that returns
+     * a list of one or more sets, each of whose consists of one or two
+     * items:
+     *
+     * - A name that is expected to be unrecognized or considered invalid
+     * - The type's namespace URI, or junk, or NULL
+     *
+     * This complies with the parameters expected by AnySchema::getType().
+     *
+     * @return  array
+     *          An array of getType() parameters is returned on success
+     *
+     * @throws  \Exception
+     *          Raised in case of an internal error
+     */
+    public function provideInvalidTypeIDs()
+    {
+        $foobar = md5("foobar");
+
+        return array(
+            array("", self::NS_SCHEMA),
+            array("foobar", self::NS_SCHEMA),
+            array(""),
+            array($foobar),
+            array("", null),
+            array($foobar, null),
+            array("--foobar"),
+        );
+    }
+
+    /**
+     * Obtain a sequence of getType() parameters
+     *
+     * The provideInvalidTypeIDs() method is a data provider that returns
+     * a list of one or more sets, each of whose consists of one or two
+     * items:
+     *
+     * - A name that is expected to be unrecognized or considered malformed
+     * - The type's namespace URI, or malformed junk, or NULL
+     *
+     * This complies with the parameters expected by AnySchema::getType().
+     *
+     * @return  array
+     *          An array of getType() parameters is returned on success
+     *
+     * @throws  \Exception
+     *          Raised in case of an internal error
+     */
+    public function provideMalformedTypeIDs()
+    {
+        return array(
+            /* array("--fobar"), */
+            array("string", self::NS_SCHEMA),
+            array("foobar", "baz"),
+            array(null, "urn:lousson:junk"),
+        );
+    }
+
+    /**
      * Test the getType() method
      *
      * The testValidGetType() method is a test case for the getType()
@@ -81,10 +230,14 @@ abstract class AbstractSchemaTest extends AbstractTest
      */
     public function testValidGetType($name, $namespaceURI = null)
     {
-        $namespaceURI = "urn:lousson:junk";
-        $mock = $this->getTypeMock($name, $namespaceURI);
-        $schema = $this->getSchema($mock);
+        $schema = $this->getSchema();
         $type = $this->getType($name, $namespaceURI);
+
+        $this->assertInstanceOf(
+            self::I_TYPE, $type, sprintf(
+            "%s::getType(\"%s\", ..) must return a %s instance",
+            get_class($schema), $name, self::I_SCHEMA
+        ));
 
         $this->assertEquals(
             $name, $type->getName(), sprintf(

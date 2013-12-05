@@ -32,7 +32,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Schema\AnyType interface definition
+ * Lousson\Schema\AbstractComplexType class definition
  *
  * @package     org.lousson.schema
  * @copyright   (c) 2013, The Lousson Project
@@ -42,40 +42,64 @@
  */
 namespace Lousson\Schema;
 
+/** Dependencies: */
+use Lousson\Schema\AbstractType;
+
 /**
- * An interface for types
+ * An abstract complex type implementation
  *
  * @since       lousson/Lousson_Schema-0.1.0
  * @package     org.lousson.schema
  */
-interface AnyType
+abstract class AbstractComplexType extends AbstractType
 {
     /**
-     * Obtain the type's name
+     * Import a record item
      *
-     * The getName() method is used to retrieve the name of the type.
+     * The importItem() method is used internally by the import() method
+     * when iterating over each $key in the sequence of keys returned by
+     * indexInput() in order to import the $input record into it's $value
+     * representation.
      *
-     * @return  string
-     *          The type's name, if any, is returned on success.
-     *          NULL is returned in case the type is not associated with
-     *          a name.
+     * @param   array               $input  The input record
+     * @param   string              $key    The key to import
+     * @param   mixed               $value  The internal value
+     *
+     * @throws  \Lousson\Schema\AnySchemaException
+     *          All possible exceptions implement this interface
+     *
+     * @throws  \InvalidArgumentException
+     *          Raised in case either the given $input is or the imported
+     *          $value would be considered invalid
+     *
+     * @throws  \RuntimeException
+     *          Raised in case of an internal error
      */
-    public function getName();
+    abstract protected function importItem(array $input, $key, &$value);
 
     /**
-     * Obtain the type's namespace URI
+     * Export a record item
      *
-     * The getNamespaceURI() method is used to retrieve the URI of the
-     * namespace the type is associated with. (This corresponds, for
-     * example, to the "target namespace" of the type definition components
-     * in XML Schema.)
+     * The exportItem() method is used internally by the export() method
+     * when iterating over each $key in the sequence of keys returned by
+     * indexValue() in order to export the internal $value into the $output
+     * record representation.
      *
-     * @return  string
-     *          The type's namespace URI, if any, is returned on success.
-     *          NULL is returned in case the type is not associated with
-     *          any namespace.
+     * @param   array               $output The output record
+     * @param   string              $key    The key to import
+     * @param   mixed               $value  The internal value
+     *
+     * @throws  \Lousson\Schema\AnySchemaException
+     *          All possible exceptions implement this interface
+     *
+     * @throws  \InvalidArgumentException
+     *          Raised in case either the given $value is or the exported
+     *          $output would be considered invalid
+     *
+     * @throws  \RuntimeException
+     *          Raised in case of an internal error
      */
-    public function getNamespaceURI();
+    abstract protected function exportItem(array &$output, $key, $value);
 
     /**
      * Import to value space
@@ -100,7 +124,24 @@ interface AnyType
      * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function import($input);
+    public function import($input)
+    {
+        $this->normalizeRecord($input);
+
+        $keyList = array();
+        $value = $this->indexInput($input, $keyList);
+
+        try {
+            foreach ($keyList as $key) {
+                $this->importItem($input, $key, $value);
+            }
+        }
+        catch (\Lousson\Schema\AnySchemaException $error) {
+            $this->importError($input, $error);
+        }
+
+        return $value;
+    }
 
     /**
      * Export from value space
@@ -124,55 +165,88 @@ interface AnyType
      * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function export($value);
+    public function export($value)
+    {
+        $keyList = array();
+        $output = $this->indexValue($value, $keyList);
+
+        try {
+            foreach ($keyList as $key) {
+                $this->exportItem($output, $key, $value);
+            }
+        }
+        catch (\Lousson\Schema\AnySchemaException $error) {
+            $this->exportError($value, $error);
+        }
+
+        return $output;
+    }
 
     /**
-     * Import a value from another type's representation
+     * Determine index keys using the canonical representation
      *
-     * The importFrom() method is used to import the given $input from
-     * the $type's representation to the own value space.
+     * The indexInput() method is used internally to populate a sequence
+     * of index $keys (strings), each of which is used in an invocation of
+     * importItem() during the import() process. Additionally, it returns
+     * a prototype of the internal representation for use as the $value
+     * reference.
      *
-     * @param   AnyType         $type       The type to import from
-     * @param   string          $input      The value to import
+     * @param   array               $input      The input record to map
+     * @param   array               $keys       The index keys to populate
      *
      * @return  mixed
-     *          The imported value is returned on success
+     *          An internal value prototype is returned on success
      *
      * @throws  \Lousson\Schema\AnySchemaException
      *          All possible exceptions implement this interface
      *
      * @throws  \InvalidArgumentException
      *          Raised in case either the given $input representation is
-     *          or the imported value would be considered invalid by either
-     *          of the two types
+     *          or the imported value would be considered invalid
      *
      * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function importFrom(AnyType $type, $input);
+    protected function indexInput(array $input, array &$keys)
+    {
+        $keys = array_keys($input);
+        return array();
+    }
 
     /**
-     * Export a value into another type's representation
+     * Determine index keys using the internal representation
      *
-     * The exportTo() method is used to export the given $value from the
-     * own value space into the $type's canonical representation.
+     * The indexValue() method is used internally to populate a sequence
+     * of index $keys (strings), each of which is used in an invocation of
+     * exportItem() during the export() process. Additionally, it returns
+     * a prototype record for use as the $output reference.
      *
-     * @param   AnyType         $type   The type to export to
-     * @param   mixed           $value  The value to export
+     * @param   mixed               $value      The internal value to map
+     * @param   array               $keys       The index keys to populate
      *
-     * @return  string
-     *          The exported representation is returned on success
+     * @return  array
+     *          A (possibly empty) record prototype is returned on success
      *
-     * @throws  \Lousson\Schema\AnyTypeException
+     * @throws  \Lousson\Schema\AnySchemaException
      *          All possible exceptions implement this interface
      *
      * @throws  \InvalidArgumentException
-     *          Raised in case the given $value is considered invalid by
-     *          either of the two types
+     *          Raised in case either the given $input representation is
+     *          or the imported value would be considered invalid
      *
      * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function exportTo(AnyType $type, $value);
+    protected function indexValue($value, array &$keys)
+    {
+        if (is_array($value)) {
+            $keys = array_keys($value);
+        }
+        else {
+            $this->exportError($value);
+        }
+
+        return array();
+    }
 }
 

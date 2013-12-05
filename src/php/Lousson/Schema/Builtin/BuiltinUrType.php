@@ -32,35 +32,54 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Schema\AnyType interface definition
+ * Lousson\Schema\Type\BuiltinUrType class definition
  *
  * @package     org.lousson.schema
  * @copyright   (c) 2013, The Lousson Project
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
- * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @author      Attila G. Levai <sgnl19 at quirkies.org>
  * @filesource
  */
-namespace Lousson\Schema;
+namespace Lousson\Schema\Builtin;
+
+/* Dependencies: */
+use Lousson\Schema\AbstractType;
 
 /**
- * An interface for types
+ * A baseclass for builtin types
  *
  * @since       lousson/Lousson_Schema-0.1.0
  * @package     org.lousson.schema
  */
-interface AnyType
+class BuiltinUrType extends AbstractType
 {
+    /**
+     * The type name of the UrType
+     *
+     * @var string
+     */
+    const NAME = "anyType";
+
+    /**
+     * The namespace URI of all builtin types
+     *
+     * @var string
+     */
+    const NAMESPACE_URI = self::NS_SCHEMA;
+
     /**
      * Obtain the type's name
      *
-     * The getName() method is used to retrieve the name of the type.
+     * The getName() method is used to retrieve the name of the type; the
+     * same as the value of the StringType::NAME constant.
      *
      * @return  string
-     *          The type's name, if any, is returned on success.
-     *          NULL is returned in case the type is not associated with
-     *          a name.
+     *          The type's name is returned on success.
      */
-    public function getName();
+    public function getName()
+    {
+        return self::NAME;
+    }
 
     /**
      * Obtain the type's namespace URI
@@ -70,12 +89,17 @@ interface AnyType
      * example, to the "target namespace" of the type definition components
      * in XML Schema.)
      *
+     * Note that the builtin implementation always returns NS_SCHEMA and
+     * is NOT intended to be used in classes outside the builtin schema
+     * (PHP) namespace!
+     *
      * @return  string
-     *          The type's namespace URI, if any, is returned on success.
-     *          NULL is returned in case the type is not associated with
-     *          any namespace.
+     *          The type's namespace URI is returned on success.
      */
-    public function getNamespaceURI();
+    public function getNamespaceURI()
+    {
+        return self::NAMESPACE_URI;
+    }
 
     /**
      * Import to value space
@@ -100,7 +124,16 @@ interface AnyType
      * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function import($input);
+    public function import($input)
+    {
+        try {
+            $this->normalizeItem($value = $input);
+            return $value;
+        }
+        catch (\Lousson\Record\AnyRecordException $error) {
+            $this->importError($value, $error);
+        }
+    }
 
     /**
      * Export from value space
@@ -124,55 +157,15 @@ interface AnyType
      * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function export($value);
-
-    /**
-     * Import a value from another type's representation
-     *
-     * The importFrom() method is used to import the given $input from
-     * the $type's representation to the own value space.
-     *
-     * @param   AnyType         $type       The type to import from
-     * @param   string          $input      The value to import
-     *
-     * @return  mixed
-     *          The imported value is returned on success
-     *
-     * @throws  \Lousson\Schema\AnySchemaException
-     *          All possible exceptions implement this interface
-     *
-     * @throws  \InvalidArgumentException
-     *          Raised in case either the given $input representation is
-     *          or the imported value would be considered invalid by either
-     *          of the two types
-     *
-     * @throws  \RuntimeException
-     *          Raised in case of an internal error
-     */
-    public function importFrom(AnyType $type, $input);
-
-    /**
-     * Export a value into another type's representation
-     *
-     * The exportTo() method is used to export the given $value from the
-     * own value space into the $type's canonical representation.
-     *
-     * @param   AnyType         $type   The type to export to
-     * @param   mixed           $value  The value to export
-     *
-     * @return  string
-     *          The exported representation is returned on success
-     *
-     * @throws  \Lousson\Schema\AnyTypeException
-     *          All possible exceptions implement this interface
-     *
-     * @throws  \InvalidArgumentException
-     *          Raised in case the given $value is considered invalid by
-     *          either of the two types
-     *
-     * @throws  \RuntimeException
-     *          Raised in case of an internal error
-     */
-    public function exportTo(AnyType $type, $value);
+    public function export($value)
+    {
+        try {
+            $this->normalizeItem($output = $value);
+            return $output;
+        }
+        catch (\Lousson\Record\AnyRecordException $error) {
+            $this->exportError($value, $error);
+        }
+    }
 }
 

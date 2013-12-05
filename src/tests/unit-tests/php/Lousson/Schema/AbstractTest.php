@@ -73,134 +73,18 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
     const I_TYPE = "Lousson\\Schema\\AnyType";
 
     /**
+     * The fully qualified name of the AnyParticle interface
+     *
+     * @var string
+     */
+    const I_PARTICLE = "Lousson\\Schema\\AnyParticle";
+
+    /**
      * The namespace URI of XML Schema
      *
      * @var string
      */
     const NS_SCHEMA = "http://www.w3.org/2001/XMLSchema";
-
-    /**
-     * Obtain a schema instance
-     *
-     * The getSchema() method is used in the test cases to obtain an
-     * instance of the schema implementation under test.
-     * If the $type parameter is set, the caller expects the returned
-     * schema to recognize the $type provided (when invoking getType()
-     * with it's name and namespaceURI) - at least.
-     *
-     * @param   AnyType     $type       The required type object, if any
-     *
-     * @return  \Lousson\Schema\AnySchema
-     *          An instance of the test schema is returned on success
-     *
-     * @throws  \Exception
-     *          Raised in case of an internal error
-     */
-    abstract public function getSchema(AnyType $type = null);
-
-    /**
-     * Obtain a type instance
-     *
-     * The getType() method is used instead of a direct invocation of the
-     * schema's method of the same name. It decorates the testee, in order
-     * to check on it's behavior.
-     *
-     * @param   string      $name           The name of the type to look up
-     * @param   string      $namespaceURI   The type's namespace
-     *
-     * @return  \Lousson\Schema\AnyType
-     *          An instance of the AnyType interface is returned on success
-     *
-     * @throws  \PHPUnit_Framework_AssertionFailedError
-     *          Raised in case the test discovered any issue
-     *
-     * @throws  \Lousson\Schema\AnySchemaException
-     *          All allowed exceptions implement this interface
-     *
-     * @throws  \InvalidArgumentException
-     *          Raised in case one of the input parameters is considered
-     *          invalid
-     *
-     * @throws  \Exception
-     *          Raised in case of an internal error
-     */
-    public function getType($name, $namespaceURI = null)
-    {
-        $schema = $this->getSchema();
-        $this->assertInstanceOf(
-            self::I_SCHEMA, $schema, sprintf(
-            "%s::getSchema() must return an instance of %s",
-            get_class($this), self::I_SCHEMA
-        ));
-
-        $type = $schema->getType($name, $namespaceURI);
-        $this->assertInstanceOf(
-            self::I_TYPE, $type, sprintf(
-            "%s::getType() must return an instance of %s",
-            get_class($schema), self::I_TYPE
-        ));
-
-        return $type;
-    }
-
-    /**
-     * Obtain a sequence of getType() parameters
-     *
-     * The provideValidTypeIDs() method is a data provider that returns
-     * a list of one or more sets, each of whose consists of one or two
-     * items:
-     *
-     * - The name of a type that is expected to be recognized
-     * - The type's namespace URI, or NULL
-     *
-     * This complies with the parameters expected by AnySchema::getType().
-     *
-     * @return  array
-     *          An array of getType() parameters is returned on success
-     *
-     * @throws  \Exception
-     *          Raised in case of an internal error
-     */
-    public function provideValidTypeIDs()
-    {
-        return array(
-            array("anyURI", self::NS_SCHEMA),
-            array("anyURI"),
-        );
-    }
-
-    /**
-     * Obtain a sequence of getType() parameters
-     *
-     * The provideInvalidTypeIDs() method is a data provider that returns
-     * a list of one or more sets, each of whose consists of one or two
-     * items:
-     *
-     * - A name that is expected to be unrecognized or considered invalid
-     * - The type's namespace URI, or junk, or NULL
-     *
-     * This complies with the parameters expected by AnySchema::getType().
-     *
-     * @return  array
-     *          An array of getType() parameters is returned on success
-     *
-     * @throws  \Exception
-     *          Raised in case of an internal error
-     */
-    public function provideInvalidTypeIDs()
-    {
-        $foobar = md5("foobar");
-
-        return array(
-            array("", self::NS_SCHEMA),
-            array("foobar", self::NS_SCHEMA),
-            array(""),
-            array($foobar),
-            array("", null),
-            array($foobar, null),
-            array("--foobar"),
-        );
-    }
 
     /**
      * Obtain a type mock object
@@ -222,6 +106,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
         static $methods = array(
             "getName",
             "getNamespaceURI",
+            "getBaseType",
             "import",
             "export",
             "importFrom",

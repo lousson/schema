@@ -80,6 +80,12 @@ ${contents}
         <max>1.999.999</max>
       </package>
       <package>
+        <name>Lousson_Record</name>
+        <channel>pear.lousson.org</channel>
+        <min>1.2.0</min>
+        <max>1.999.999</max>
+      </package>
+      <package>
         <name>Lousson_URI</name>
         <channel>pear.lousson.org</channel>
         <min>1.0.0</min>

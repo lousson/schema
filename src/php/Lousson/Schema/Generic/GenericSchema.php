@@ -38,23 +38,38 @@
  * @copyright   (c) 2013, The Lousson Project
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
  * @author      Attila G. Levai <sgnl19 at quirkies.org>
+ * @author      Mathias J. Hennig <mhennig at quirkies.org>
  * @filesource
  */
 namespace Lousson\Schema\Generic;
 
 /* Interfaces: */
-use Lousson\Schema\AnySchema;
+use Lousson\Schema\AbstractSchema;
 use Lousson\Schema\AnyType;
+use Lousson\Schema\Builtin\BuiltinSchema;
 use Lousson\Schema\Error\SchemaArgumentError;
 
 /**
  * A generic implementation of the AnySchema interface
  *
+ * The Lousson\Schema\Generic\GenericSchema class is a fully-functional
+ * implementation of the AnySchema interface that is aware of each of the
+ * builtin types in the schema namespace and, additionally, can be made
+ * aware of further types at runtime.
+ *
  * @since       lousson/Lousson_Schema-0.1.0
  * @package     org.lousson.schema
  */
-class GenericSchema implements AnySchema
+class GenericSchema extends AbstractSchema
 {
+    /**
+     * Create a generic schema instance
+     */
+    public function __construct()
+    {
+        $this->_base = BuiltinSchema::getInstance();
+    }
+
     /**
      * Lookup a type implementation
      *
@@ -83,21 +98,18 @@ class GenericSchema implements AnySchema
      */
     public function getType($name, $namespaceURI = null)
     {
-		if (null === $namespaceURI) {
-			$namespaceURI = AnyType::NS_SCHEMA;
-		}
+        $this->normalizeNCName($name);
+        $namespaceURI = (string) $this->importURI($namespaceURI);
 
-		if (!isset($this->_types[$namespaceURI])) {
-            $message = "Unknown namespace: \"$namespaceURI\"";
-			throw new SchemaArgumentError($message);
-		}
-
-        if (!isset($this->_types[$namespaceURI][$name])) {
-            $message = "Unknown type: \"$name\" (\"$namespaceURI\")";
-			throw new SchemaArgumentError($message);
+        if (isset($this->_types[$namespaceURI][$name])) {
+            $type = $this->_types[$namespaceURI][$name];
+        }
+        else {
+            /* May raise a schema exception */
+            $type = $this->_base->getType($name, $namespaceURI);
         }
 
-		return $this->_types[$namespaceURI][$name];
+		return $type;
     }
 
     /**
@@ -116,13 +128,30 @@ class GenericSchema implements AnySchema
      */
     public function setType($name, $namespaceURI, AnyType $type)
     {
-    	if (!preg_match("/^[A-Za-z][A-Za-z0-9\\-_.]*\$/", $name)) {
-            $message = "Invalid type name: \"$name\"";
-    		throw new SchemaArgumentError($message);
-    	}
+        static $code = SchemaArgumentError::E_INVALID;
 
-		$namespaceURI = (string) $namespaceURI;
-		$this->_types[$namespaceURI][$name] = $type;
+        isset($name) && $this->normalizeNCName($name);
+        $namespaceURI = $this->importURI($namespaceURI);
+
+        if (!isset($name)) {
+
+            if (!isset($namespaceURI)) {
+                $name = $type->getName();
+                $namespaceURI = $type->getNamespaceURI();
+            }
+
+            if (!isset($name)) {
+                $message = "Could not register type without name";
+                throw new SchemaArgumentError($message, $code);
+            }
+        }
+
+        if (self::NS_SCHEMA === (string) $namespaceURI) {
+            $message = "Could not register types in the builtin schema";
+            throw new SchemaArgumentError($message, $code);
+        }
+
+		$this->_types[(string) $namespaceURI][$name] = $type;
     }
 
     /**
@@ -131,5 +160,12 @@ class GenericSchema implements AnySchema
      * @var array
      */
     private $_types = array();
+
+    /**
+     * The builtin base schema
+     *
+     * @var \Lousson\Schema\BuiltinSchema
+     */
+    private $_base;
 }
 

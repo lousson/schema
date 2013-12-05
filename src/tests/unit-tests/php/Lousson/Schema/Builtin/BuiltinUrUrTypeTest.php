@@ -32,7 +32,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Schema\AnySchema interface definition
+ *  Lousson\Schema\Builtin\BuiltinUrTypeTest class definition
  *
  * @package     org.lousson.schema
  * @copyright   (c) 2013, The Lousson Project
@@ -40,39 +40,48 @@
  * @author      Mathias J. Hennig <mhennig at quirkies.org>
  * @filesource
  */
-namespace Lousson\Schema;
+namespace Lousson\Schema\Builtin;
+
+/** Dependencies: */
+use Lousson\Schema\AbstractTypeTest;
 
 /**
- * An interface for schemas
+ *  A test case for the BuiltinUrType class
  *
  * @since       lousson/Lousson_Schema-0.1.0
  * @package     org.lousson.schema
  */
-interface AnySchema
+class BuiltinUrTypeTest extends AbstractTypeTest
 {
     /**
-     * Lookup a type implementation
      *
-     * The getType() method returns the type object, an instance of the
-     * Lousson\Schema\AnyType interface, that is associated with the given
-     * $name and $namespaceURI.
-     *
-     * @param   string      $name           The name of the type to look up
-     * @param   string      $namespaceURI   The type's namespace
-     *
-     * @return  \Lousson\Schema\AnyType
-     *          An instance of the AnyType interface is returned on success
-     *
-     * @throws  \Lousson\Schema\AnySchemaException
-     *          All possible exceptions implement this interface
-     *
-     * @throws  \InvalidArgumentException
-     *          Raised in case one of the input parameters is considered
-     *          invalid
-     *
-     * @throws  \RuntimeException
-     *          Raised in case of an internal error
      */
-    public function getType($name, $namespaceURI = null);
+    public function getType()
+    {
+        return new BuiltinUrType();
+    }
+
+    /**
+     *
+     */
+    public function provideImportTestData()
+    {
+        return array(
+            array("foobar", "foobar"),
+            array("", ""),
+            array(123, "123"),
+        );
+    }
+
+    /**
+     *
+     */
+    public function provideExportTestData()
+    {
+        return array(
+            array("foobar", "foobar"),
+            array("", ""),
+        );
+    }
 }
 

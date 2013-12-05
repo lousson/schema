@@ -32,47 +32,103 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Schema\AnySchema interface definition
+ * Lousson\Schema\Builtin\BuiltinSimpleType class definition
  *
  * @package     org.lousson.schema
  * @copyright   (c) 2013, The Lousson Project
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
- * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @author      Attila G. Levai <sgnl19 at quirkies.org>
  * @filesource
  */
-namespace Lousson\Schema;
+namespace Lousson\Schema\Builtin;
+
+/* Dependencies: */
+use Lousson\Schema\Builtin\BuiltinUrType;
 
 /**
- * An interface for schemas
+ * A baseclass for builtin types
  *
  * @since       lousson/Lousson_Schema-0.1.0
  * @package     org.lousson.schema
  */
-interface AnySchema
+class BuiltinSimpleType extends BuiltinUrType
 {
     /**
-     * Lookup a type implementation
+     * The type name of the SimpleType
      *
-     * The getType() method returns the type object, an instance of the
-     * Lousson\Schema\AnyType interface, that is associated with the given
-     * $name and $namespaceURI.
+     * @var string
+     */
+    const NAME = "anySimpleType";
+
+    /**
+     * Obtain the type's name
      *
-     * @param   string      $name           The name of the type to look up
-     * @param   string      $namespaceURI   The type's namespace
+     * The getName() method is used to retrieve the name of the type; the
+     * same as the value of the StringType::NAME constant.
      *
-     * @return  \Lousson\Schema\AnyType
-     *          An instance of the AnyType interface is returned on success
+     * @return  string
+     *          The type's name is returned on success.
+     */
+    public function getName()
+    {
+        return self::NAME;
+    }
+
+    /**
+     * Import to value space
+     *
+     * The import() method converts the given $input representation,
+     * which must conform to the "record item" definition, to it's internal
+     * value, which might be anything - with the restriction that every
+     * type should use only one internal representation.
+     *
+     * @param   string  $input      The value to import
+     *
+     * @return  mixed
+     *          The internal representation is returned on success
      *
      * @throws  \Lousson\Schema\AnySchemaException
      *          All possible exceptions implement this interface
      *
      * @throws  \InvalidArgumentException
-     *          Raised in case one of the input parameters is considered
-     *          invalid
+     *          Raised in case either the given $input representation is
+     *          or the imported value would be considered invalid
      *
      * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function getType($name, $namespaceURI = null);
+    public function import($input)
+    {
+        $this->normalizeString($value = $input);
+        return $value;
+    }
+
+    /**
+     * Export from value space
+     *
+     * The export() method is used to convert the given $value (which
+     * must be a compatible, probably import()ed representation) to it's
+     * canonical representation, which must comply to the "record item"
+     * definition.
+     *
+     * @param   mixed   $value      The value to export
+     *
+     * @return  mixed
+     *          The $value's canonical representation is returned on success
+     *
+     * @throws  \Lousson\Schema\AnySchemaException
+     *          All possible exceptions implement this interface
+     *
+     * @throws  \InvalidArgumentException
+     *          Raised in case the given $value is considered invalid
+     *
+     * @throws  \RuntimeException
+     *          Raised in case of an internal error
+     */
+    public function export($value)
+    {
+        $this->normalizeString($output = $value);
+        return $output;
+    }
 }
 

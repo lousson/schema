@@ -32,7 +32,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Schema\AnySchema interface definition
+ *  Lousson\Schema\Builtin\BuiltinSchemaTest class definition
  *
  * @package     org.lousson.schema
  * @copyright   (c) 2013, The Lousson Project
@@ -40,39 +40,61 @@
  * @author      Mathias J. Hennig <mhennig at quirkies.org>
  * @filesource
  */
-namespace Lousson\Schema;
+namespace Lousson\Schema\Builtin;
+
+/** Dependencies: */
+use Lousson\Schema\AnyType;
+use Lousson\Schema\AbstractSchemaTest;
+use Lousson\Schema\Builtin\BuiltinSchema;
 
 /**
- * An interface for schemas
+ * A test case for the BuiltinSchema class
  *
  * @since       lousson/Lousson_Schema-0.1.0
  * @package     org.lousson.schema
+ * @link        http://www.phpunit.de/manual/current/en/
  */
-interface AnySchema
+class BuiltinSchemaTest extends AbstractSchemaTest
 {
     /**
-     * Lookup a type implementation
+     * Obtain a schema instance
      *
-     * The getType() method returns the type object, an instance of the
-     * Lousson\Schema\AnyType interface, that is associated with the given
-     * $name and $namespaceURI.
+     * The getSchema() method is used in the test cases to obtain an
+     * instance of the schema implementation under test.
+     * If the $type parameter is set, the caller expects the returned
+     * schema to recognize the $type provided (when invoking getType()
+     * with it's name and namespaceURI) - at least.
      *
-     * @param   string      $name           The name of the type to look up
-     * @param   string      $namespaceURI   The type's namespace
+     * @param   AnyType     $type       The required type object, if any
      *
-     * @return  \Lousson\Schema\AnyType
-     *          An instance of the AnyType interface is returned on success
+     * @return  \Lousson\Schema\AnySchema
+     *          An instance of the test schema is returned on success
      *
-     * @throws  \Lousson\Schema\AnySchemaException
-     *          All possible exceptions implement this interface
-     *
-     * @throws  \InvalidArgumentException
-     *          Raised in case one of the input parameters is considered
-     *          invalid
-     *
-     * @throws  \RuntimeException
+     * @throws  \Exception
      *          Raised in case of an internal error
      */
-    public function getType($name, $namespaceURI = null);
+    public function getSchema(AnyType $type = null)
+    {
+        $this->assertNotNull($this->_schema);
+        return $this->_schema;
+    }
+
+    /**
+     * Prepare test suite
+     *
+     * The setUp() method is invoked to reset the test runtime and to
+     * prepare for the next test invocation.
+     */
+    public function setUp()
+    {
+        $this->_schema = BuiltinSchema::getInstance();
+    }
+
+    /**
+     * The schema under test
+     *
+     * @var \Lousson\Schema\Builtin\BuiltinSchema
+     */
+    private $_schema;
 }
 

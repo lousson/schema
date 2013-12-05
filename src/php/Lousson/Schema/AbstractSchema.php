@@ -32,7 +32,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Schema\AnySchema interface definition
+ * Lousson\Schema\AbstractSchema class definition
  *
  * @package     org.lousson.schema
  * @copyright   (c) 2013, The Lousson Project
@@ -42,13 +42,19 @@
  */
 namespace Lousson\Schema;
 
+/* Dependencies: */
+use Lousson\Schema\AbstractComponent;
+use Lousson\Schema\AnySchema;
+use Lousson\Schema\Error\SchemaArgumentError;
+use Exception;
+
 /**
- * An interface for schemas
+ * An abstract schema implementation
  *
  * @since       lousson/Lousson_Schema-0.1.0
  * @package     org.lousson.schema
  */
-interface AnySchema
+abstract class AbstractSchema extends AbstractComponent implements AnySchema
 {
     /**
      * Lookup a type implementation
@@ -73,6 +79,15 @@ interface AnySchema
      * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function getType($name, $namespaceURI = null);
+    public function getType($name, $namespaceURI = null)
+    {
+        $this->normalizeNCName($name);
+        $namespaceURI = $this->importURI($namespaceURI);
+        $className = get_class($this);
+        $pattern = "Could not provide {%s}%s type";
+        $message = sprintf($pattern, $namespaceURI, $name, $className);
+        $code = SchemaArgumentError::E_UNSUPPORTED_TYPE;
+        throw new SchemaArgumentError($message, $code);
+    }
 }
 

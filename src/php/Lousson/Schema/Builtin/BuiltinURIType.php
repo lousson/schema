@@ -32,50 +32,81 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Lousson\Schema\AnyType interface definition
+ * Lousson\Schema\Builtin\BuiltinURIType class definition
  *
  * @package     org.lousson.schema
  * @copyright   (c) 2013, The Lousson Project
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
- * @author      Mathias J. Hennig <mhennig at quirkies.org>
+ * @author      Attila G. Levai <sgnl19 at quirkies.org>
  * @filesource
  */
-namespace Lousson\Schema;
+namespace Lousson\Schema\Builtin;
+
+/* Dependencies: */
+use Lousson\Schema\Builtin\BuiltinAtomicType;
+use Lousson\URI\AnyURIFactory;
+use Lousson\URI\Builtin\BuiltinURIFactory;
 
 /**
- * An interface for types
+ * A generic implementation of the AnySchema interface
  *
  * @since       lousson/Lousson_Schema-0.1.0
  * @package     org.lousson.schema
  */
-interface AnyType
+class BuiltinURIType extends BuiltinAtomicType
 {
+    /**
+     * The type name of the URIType
+     *
+     * @var string
+     */
+    const NAME = "anyURI";
+
+    /**
+     * Obtain an URI type instance
+     *
+     * The static getInstance() method is a shortcut used to obtain an
+     * URIType instance.
+     *
+     * Note that this method is deprecated; it has been introduced only
+     * to work as an intermediary solution for the dependency issue in
+     * the AbstractEnty class anyway!
+     *
+     * @return  \Lousson\Schema\Type\URIType
+     *          An URI type type instance is returned on success
+     */
+    public static function getInstance()
+    {
+        static $instance = null;
+        isset($instance) || ($instance = new self());
+        return $instance;
+    }
+
+    /**
+     *
+     */
+    public function __construct(AnyURIFactory $factory = null)
+    {
+        if (!isset($factory)) {
+            $factory = new BuiltinURIFactory();
+        }
+
+        $this->_factory = $factory;
+    }
+
     /**
      * Obtain the type's name
      *
-     * The getName() method is used to retrieve the name of the type.
+     * The getName() method is used to retrieve the name of the type; the
+     * same as the value of the URIType::NAME constant.
      *
      * @return  string
-     *          The type's name, if any, is returned on success.
-     *          NULL is returned in case the type is not associated with
-     *          a name.
+     *          The type's name is returned on success.
      */
-    public function getName();
-
-    /**
-     * Obtain the type's namespace URI
-     *
-     * The getNamespaceURI() method is used to retrieve the URI of the
-     * namespace the type is associated with. (This corresponds, for
-     * example, to the "target namespace" of the type definition components
-     * in XML Schema.)
-     *
-     * @return  string
-     *          The type's namespace URI, if any, is returned on success.
-     *          NULL is returned in case the type is not associated with
-     *          any namespace.
-     */
-    public function getNamespaceURI();
+    public function getName()
+    {
+        return self::NAME;
+    }
 
     /**
      * Import to value space
@@ -100,7 +131,18 @@ interface AnyType
      * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function import($input);
+    public function import($input)
+    {
+        try {
+            $lexical = parent::import($input);
+            $uri = $this->_factory->getURI($lexical);
+        }
+        catch (\Lousson\URI\AnyURIException $error) {
+            $this->importError($input, $error);
+        }
+
+        return $uri;
+    }
 
     /**
      * Export from value space
@@ -124,55 +166,26 @@ interface AnyType
      * @throws  \RuntimeException
      *          Raised in case of an internal error
      */
-    public function export($value);
+    public function export($value)
+    {
+        if (!$value instanceof \Lousson\URI\AnyURI) try {
+            $lexical = parent::export($value);
+            $uri = $this->_factory->getURI($lexical);
+        }
+        catch (\Lousson\URI\AnyURIException $error) {
+            $this->exportError($value, $error);
+        }
+        else {
+            $uri = $value;
+        }
+
+        $output = (string) $uri;
+        return $output;
+    }
 
     /**
-     * Import a value from another type's representation
-     *
-     * The importFrom() method is used to import the given $input from
-     * the $type's representation to the own value space.
-     *
-     * @param   AnyType         $type       The type to import from
-     * @param   string          $input      The value to import
-     *
-     * @return  mixed
-     *          The imported value is returned on success
-     *
-     * @throws  \Lousson\Schema\AnySchemaException
-     *          All possible exceptions implement this interface
-     *
-     * @throws  \InvalidArgumentException
-     *          Raised in case either the given $input representation is
-     *          or the imported value would be considered invalid by either
-     *          of the two types
-     *
-     * @throws  \RuntimeException
-     *          Raised in case of an internal error
+     * @var \Lousson\URI\AnyURIFactory
      */
-    public function importFrom(AnyType $type, $input);
-
-    /**
-     * Export a value into another type's representation
-     *
-     * The exportTo() method is used to export the given $value from the
-     * own value space into the $type's canonical representation.
-     *
-     * @param   AnyType         $type   The type to export to
-     * @param   mixed           $value  The value to export
-     *
-     * @return  string
-     *          The exported representation is returned on success
-     *
-     * @throws  \Lousson\Schema\AnyTypeException
-     *          All possible exceptions implement this interface
-     *
-     * @throws  \InvalidArgumentException
-     *          Raised in case the given $value is considered invalid by
-     *          either of the two types
-     *
-     * @throws  \RuntimeException
-     *          Raised in case of an internal error
-     */
-    public function exportTo(AnyType $type, $value);
+    private $_factory;
 }
 
